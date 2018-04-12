@@ -15,8 +15,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import org.controlsfx.control.ToggleSwitch;
 
@@ -261,11 +263,16 @@ public class SetupView {
      */
     private void setupGameList() {
         VBox gameBox = new VBox();
+        gameBox.setPadding(new Insets(7,0,0,0));
+        scnBox.getStylesheets().add("CSS/SetupStyle.css");
+        gameListView.setId("gamesList");
+        gameListView.setMinWidth(70.0);
         Label gamesLabel = new Label("    GAMES");
+        gamesLabel.setPadding(new Insets(0,0,3,0));
         gamesLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         gameBox.setSpacing(8.0);
         gameListView.getItems().addAll(controller.getDataList(0));
-        gameListView.setId("gameList");
+
         gameListView.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
 
             @Override
@@ -306,17 +313,20 @@ public class SetupView {
      */
     private void setupPlayerList() {
         scnBox.getChildren().remove(playBox);
-
+        playerListView.setId("playerList");
         Label player = new Label("PLAYERS");
         player.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         BorderPane stylePane = new BorderPane();
         playBox.getChildren().clear();
-        Image refreshPic = new Image("/Images/Refresh16.gif");
+
         Button refresh = new Button();
+        Image refreshPic = new Image("/Images/refresh2.png");
         refresh.setGraphic(new ImageView(refreshPic));
+        refresh.setStyle("-fx-background-color: transparent;");
 
         stylePane.setCenter(player);
         stylePane.setLeft(refresh);
+        refresh.setId("refreshButton");
 
         refresh.setOnAction( (ActionEvent e) -> {
             playerListView.getItems().clear();
@@ -354,7 +364,7 @@ public class SetupView {
      */
     private void setupSpacer() {
         Region spacer = new Region();
-        spacer.setPrefWidth(85);
+        spacer.setPrefWidth(60);
         scnBox.getChildren().add(spacer);
     }
 }

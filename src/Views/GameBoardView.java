@@ -199,6 +199,7 @@ class LeftPane extends VBox {
     }
 
     private void setLayout(){
+        setMaxWidth(50.0);
         setAlignment(Pos.TOP_CENTER);
         setSpacing(5.0);
         setStyle("-fx-background-color: #005b96");

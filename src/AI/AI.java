@@ -97,26 +97,28 @@ public class AI {
             return moves.get(index);
         }
 
+         // check if hardAV move is good
+         moves.addAll(this.checkSoftAv(dataset,priorityMoves));
+         if(moves.size() > 0){
+             Random r = new Random();
+             int index = r.nextInt(moves.size());
+             return moves.get(index);
+         }
+
 
         if(this.getTotalTiles(dataset) < 32 && this.aheadOfOpponent(dataset)){
             // try blocking the opponent.
             moves.addAll(blockingMove(dataset, priorityMoves));
 
-        }else{
-            // get max tiles based on priority
-            moves.addAll(this.maxPrioMove(dataset,priorityMoves));
         }
-
-        if(moves.size() == 0){
-            moves.addAll(this.maxPrioMove(dataset,priorityMoves));
-        }
+        // get max tiles based on priority
+        moves.addAll(this.maxPrioMove(dataset,priorityMoves));
 
         Random r = new Random();
         int index = r.nextInt(moves.size());
         return moves.get(index);
 
     }
-
 
     private ArrayList<Integer> blockingMove(int[] dataset ,HashMap<Integer, ArrayList<Integer>> priorityMoves) {
         ReversiController controller = new ReversiController();
@@ -252,15 +254,56 @@ public class AI {
 
     private ArrayList<Integer> checkHardAv(int[] dataset, HashMap<Integer, ArrayList<Integer>> priorityMoves){
         ArrayList<Integer> moves = new ArrayList<>();
+        ArrayList<Integer> avoid = this.getHardDiagonalAvoidance();
         if(priorityMoves.get(0).size() > 0){
             ArrayList<Integer> hardAv = priorityMoves.get(0);
             for(int pmmove : hardAv){
+                if(avoid.contains(pmmove)){
+                    continue;
+                }
+
                 HashMap<Integer, ArrayList<Integer>> opponentPriorityMoves = this.getPriotitymoves(this.calculateOpponentmoves(dataset, pmmove));
-                if(opponentPriorityMoves.get(0).size() == 0){
+                if(opponentPriorityMoves.get(4).size() == 0){
                     moves.add(pmmove);
                 }
             }
         }
+        return moves;
+    }
+
+    private ArrayList<Integer> checkSoftAv(int[] dataset, HashMap<Integer, ArrayList<Integer>> priorityMoves) {
+        ArrayList<Integer> moves = new ArrayList<>();
+        ReversiController controller = new ReversiController();
+        boolean equal = false;
+        int player = 2;
+        int opponent = 1;
+
+        if(dataController.getPlayerOne()){
+            player = 1;
+            opponent = 2;
+        }
+
+        HashMap<Integer, ArrayList<Integer>> opponentmoves = this.getPriotitymoves(controller.updatePossibleMoves(dataset, opponent));
+        int opponentprio1moves = opponentmoves.get(1).size();
+
+        for(int move : priorityMoves.get(3)) {
+            HashMap<Integer, ArrayList<Integer>> newmoves = this.getPriotitymoves(controller.updatePossibleMoves(controller.calculateMove(move, player, dataset), opponent));
+            if(newmoves.get(1).size() > opponentprio1moves){
+                continue;
+            }
+            if(newmoves.get(1).size() < opponentprio1moves){
+                if(equal){
+                    moves.clear();
+                    equal = false;
+                }
+                moves.add(move);
+            }
+            if(newmoves.get(1).size() == opponentprio1moves){
+                moves.add(move);
+                equal = true;
+            }
+        }
+
         return moves;
     }
 
@@ -386,6 +429,22 @@ public class AI {
         return controller.updatePossibleMoves(newboard, opponent);
     }
 
+    private int getplayer(){
+        int player = 2;
+        if(dataController.getPlayerOne()){
+            player = 1;
+        }
+        return player;
+    }
+
+    private int getopponent(){
+        int opponent = 1;
+        if(dataController.getPlayerOne()){
+            opponent = 2;
+        }
+        return opponent;
+    }
+
 
     private ArrayList<Integer> getCorners() {
         ArrayList<Integer> corners = new ArrayList<>();
@@ -452,6 +511,15 @@ public class AI {
         hardAvoidance.add(54);
         hardAvoidance.add(55);
         hardAvoidance.add(62);
+        return hardAvoidance;
+    }
+
+    private ArrayList<Integer> getHardDiagonalAvoidance(){
+        ArrayList<Integer> hardAvoidance = new ArrayList<>();
+        hardAvoidance.add(9);
+        hardAvoidance.add(14);
+        hardAvoidance.add(49);
+        hardAvoidance.add(54);
         return hardAvoidance;
     }
 }

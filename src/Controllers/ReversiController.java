@@ -421,11 +421,11 @@ public class ReversiController extends GameController {
             //System.out.println("AI is made");
             int move = ai.makeMove(dataController.getData(), dataController.getPossibleMoves());
             //System.out.println("AI made move " + move);
-            /*try {
-                Thread.sleep(2000);
+            try {
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
-            }*/
+            }
             sentMove(move);
         }
     }

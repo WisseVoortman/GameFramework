@@ -1,9 +1,27 @@
-#gamesList{
-
 .list-cell {
-    -fx-background-color: transparent;
+
+    -fx-background-color: rgba(240,240,240,0.5);
 }
+
 .list-view {
-    -fx-background-color: transparent;
+    -fx-background-color: rgba(240,240,240,0.5);
+   }
+
+#playerList{
+
+    -fx-font-size: 10pt;
+    -fx-font-weight: bold;
 }
+
+#gamesList{
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+}
+
+/* When the list-cell is selected and focused */
+.list-view:focused .list-cell:filled:focused:selected {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-selection-bar;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background: -fx-accent;
+    -fx-text-fill: -fx-selection-bar-text;
 }
