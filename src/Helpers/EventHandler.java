@@ -62,6 +62,7 @@ public class EventHandler {
      */
     private void SVRHandler(String response)
     {
+        //System.out.println(response);
         String command = response.split(" ")[0];
         if("HELP".equals(command))
         {
@@ -123,8 +124,10 @@ public class EventHandler {
         dataController.clearPlayerlist();
         for(String name : response.split(","))
         {
-            name = name.substring(1, name.length() - 1);
-            dataController.addPlayerlistItem(name);
+            if(name.substring(1,name.length() -1).length() > 0) {
+                name = name.substring(1, name.length() - 1);
+                dataController.addPlayerlistItem(name);
+            }
         }
 
     }
@@ -189,6 +192,11 @@ public class EventHandler {
         {
             Yourturn = false;
             playerOne = false;
+        }
+        if(dataController.getDataSet() == null) {
+            if(parameters.get("GAMETYPE").equals("Reversi")) {
+                dataController.setDatasetType(GameType.Reversi);
+            }
         }
         dataController.setYourTurn(Yourturn);
         dataController.setPlayerOne(playerOne);

@@ -167,6 +167,8 @@ public class DataController {
         return this.dataset.gameData;
     }
 
+    public Dataset getDataSet() {return dataset;}
+
 
     /***
      * Returns the game type
