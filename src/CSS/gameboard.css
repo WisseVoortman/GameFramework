@@ -1,0 +1,30 @@
+#leftPane {
+
+
+     -fx-background-color: linear-gradient(to top, #0f4568, #1487d1);
+
+
+
+    /*-fx-background-insets: 0,1,4,5,6;
+    -fx-background-radius: 9,8,5,4,3;
+    -fx-padding: 15 30 15 30;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) ,
+                1, 0.0 , 0 , 1);*/
+}
+
+#rightPane{
+
+-fx-background-color: linear-gradient(to top, #7f2b26, #f7483d);
+}
+
+#centerPane{
+-fx-background-color: linear-gradient(to top, #efefef, #FAFAFA);
+}
+
+#bottomPane{
+-fx-background-color: #E8E8E8;
+}

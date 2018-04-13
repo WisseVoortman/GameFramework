@@ -13,9 +13,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -48,6 +50,7 @@ public class GameBoardView{
         borderPane.setCenter(centerPane);
         borderPane.setLeft(new LeftPane(controller));
         borderPane.setRight(new RightPane(controller));
+        borderPane.getStylesheets().add("CSS/gameboard.css");
         return new Scene(borderPane,1000,900);
     }
 }
@@ -61,11 +64,15 @@ class BottomPane extends HBox {
         setAlignment(Pos.CENTER);
         setForfeit();
         setLayout();
+        setId("bottomPane");
     }
 
     private void setForfeit() {
-        Button forfeit = new Button("Give up");
-        forfeit.setEffect(new DropShadow());
+        Button forfeit = new Button();
+        Image loginPic = new Image("/Images/closeRed2.png");
+        forfeit.setGraphic(new ImageView(loginPic));
+        forfeit.setStyle("-fx-background-color: transparent;");
+        forfeit.setPadding(new Insets(0, 0, 10, 0));
         forfeit.setOnAction((ActionEvent e) -> {
             TCPConnection connection = TCPConnection.getInstance();
             connection.sentCommand("forfeit");
@@ -130,7 +137,7 @@ class CenterPane extends GridPane {
         drawBoard(boardSize, dataSet);
         //setStylingPane();
         setLayout();
-
+        setId("centerPane");
     }
 
     private void drawBoard(int boardSize, int[] dataset) {
@@ -162,7 +169,7 @@ class CenterPane extends GridPane {
     }
 
     private void setLayout(){
-        setStyle("-fx-background-color: #FAFAFA");
+        //setStyle("-fx-background-color: #FAFAFA");
         setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
     }
 }
@@ -184,6 +191,7 @@ class LeftPane extends VBox {
         }
         setLayout();
         setText();
+        setId("leftPane");
     }
 
     private void setText(){
@@ -198,10 +206,11 @@ class LeftPane extends VBox {
     }
 
     private void setLayout(){
-        setMaxWidth(50.0);
+        //setMaxWidth(150.0);
+        setPrefWidth(120.0);
         setAlignment(Pos.TOP_CENTER);
         setSpacing(5.0);
-        setStyle("-fx-background-color: #005b96");
+        //setStyle("-fx-background-color: #005b96");
         setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
     }
 }
@@ -222,6 +231,7 @@ class RightPane extends VBox{
             String player1 = controller.getNamePlayer1();
             p2 = new Label(player1 + " \n  score");
         }
+        setId("rightPane");
         setLayout();
         setText();
     }
@@ -239,9 +249,12 @@ class RightPane extends VBox{
 
     private void setLayout(){
         setAlignment(Pos.TOP_CENTER);
+        //setMaxWidth(150.0);
+        setPrefWidth(120.0);
         setSpacing(5.0);
-        setStyle("-fx-background-color:  #ff4c4c");
+        //setStyle("-fx-background-color:  #ff4c4c");
         setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
+
     }
 
 }

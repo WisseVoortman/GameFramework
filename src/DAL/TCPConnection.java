@@ -113,7 +113,7 @@ public class TCPConnection extends Thread {
             //System.out.println("Listen con: " + checkMadeConnection());
             String response = inFromServer.readLine();
             // For testing purposes.
-            //System.out.println("server: " + response);
+            System.out.println("server: " + response);
             handler.HandleCommand(response);
         }
     }

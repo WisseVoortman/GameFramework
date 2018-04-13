@@ -1,9 +1,9 @@
 package Controllers;
 
 import DAL.TCPConnection;
+import Models.GameType;
 import Views.LoginView;
 import Views.SetupView;
-
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -114,9 +114,8 @@ public class SetupController {
      */
     public boolean checkName(String name) {
         if(name.equals("")) { return false; }
-        if(name.length() > 7) { return false; }
         for (Character c: name.toCharArray()) {
-            if(c.equals(' ')) {
+            if(c.equals(' ') || c.equals('\"')) {
                 return false;
             }
         }
@@ -128,6 +127,7 @@ public class SetupController {
      * @param sceneToSet The scene that needs to be set
      */
     public void setScene(Scene sceneToSet) {
+        DataController.getInstance().setDatasetType(GameType.Reversi);
         synchronized (primaryStage) {
             primaryStage.setScene(sceneToSet);
             DataController dataController = DataController.getInstance();
