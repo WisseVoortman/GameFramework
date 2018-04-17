@@ -207,7 +207,7 @@ public class SetupView {
         slider.setSnapToTicks(true);
         slider.setShowTickMarks(true);
         slider.setShowTickLabels(true);
-        dataController.setAiDifficulty(1);
+        dataController.setAiDifficulty(2);
 
         slider.setLabelFormatter(new StringConverter<Double>() {
 

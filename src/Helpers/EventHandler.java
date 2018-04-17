@@ -26,7 +26,7 @@ public class EventHandler {
     /**
      * Handles the server response
      * If the response is a SVR response it gives it to the SVR handler
-     * @param response
+     * @param response tbe response from the server
      */
     public void HandleCommand(String response)
     {
@@ -71,7 +71,9 @@ public class EventHandler {
         }
         if("PLAYERLIST".equals(command))
         {
-            this.PlayerlistHandler(response.substring(11));
+            if(!response.substring(11).equals("[]")) {
+                this.PlayerlistHandler(response.substring(11));
+            }
         }
         if("GAMELIST".equals(command))
         {

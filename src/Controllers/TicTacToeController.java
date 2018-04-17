@@ -26,19 +26,30 @@ public class TicTacToeController extends GameController {
         dataController.setScene(new GameBoardView(this, dataController.getData().length, dataController.getYourTurn()).createBoardScene(dataController.getData()));
     }
 
-
+    /**
+     * Updates the screen with a new board
+     */
     @Override
     public void turn() {
         dataController.setScene(new GameBoardView(this, dataController.getData().length, dataController.getYourTurn()).createBoardScene(dataController.getData()));
     }
 
 
+    /**
+     * returns the possible moves
+     * @return the possible moves in an int array
+     */
     @Override
     public int[] getPossibleMoves() {
         int[] pm = dataController.getPossibleMoves();
         return pm;
     }
 
+    /**
+     * sents the move to the server. First checks if it is this player' turn
+     * @param move the move
+     * @return true if the move was send, false otherwise
+     */
     @Override
     public boolean sentMove(int move) {
         int[] pm = dataController.getPossibleMoves();
@@ -52,7 +63,11 @@ public class TicTacToeController extends GameController {
         return !dataController.getYourTurn();
     }
 
-
+    /**
+     * Updates the game, sets the new dataset, updates the possible moves, updates the score and updates the boardview
+     * @param move the move that was made
+     * @param player the player that made the move
+     */
     @Override
     public void update(int move, int player) {
         int[] dataSet = dataController.getData();
@@ -75,6 +90,9 @@ public class TicTacToeController extends GameController {
         dataController.setScene(new GameBoardView(this, dataController.getData().length, dataController.getYourTurn()).createBoardScene(dataSet));
     }
 
+    /**
+     * Updates the score by counting the player and opponent tiles
+     */
     public void updateScore(){
         int[] dataSet = dataController.getData();
 
@@ -94,7 +112,11 @@ public class TicTacToeController extends GameController {
         dataController.setScore(playerOneScore, playerTwoScore);
     }
 
-
+    /**
+     * gets the appropiate image, red or blue tile
+     * @param val 1 for red, 2 for blue
+     * @return the path to the image
+     */
     @Override
     public String getImage(int val) {
         if (val == 1){
@@ -106,16 +128,28 @@ public class TicTacToeController extends GameController {
         return null;
     }
 
+    /**
+     * Gets the username from player1
+     * @return the name
+     */
     @Override
     public String getNamePlayer1() {
         return  dataController.getPlayerName();
     }
 
+    /**
+     * Gets the username from player2
+     * @return the name
+     */
     @Override
     public String getNameOppenent() {
         return  dataController.getOpponentName();
     }
 
+    /**
+     * Returns true if you're player1
+     * @return
+     */
     @Override
     public boolean getPlayer1() {
         return dataController.getPlayerOne();

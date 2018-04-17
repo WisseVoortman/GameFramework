@@ -27,6 +27,11 @@ public class ReversiController extends GameController {
         dataController.setScene(new GameBoardView(this, dataController.getData().length, dataController.getYourTurn()).createBoardScene(dataController.getData()));
     }
 
+    /**
+     * Updates the boardview when a new move is made
+     * @param move the move that was made
+     * @param player the player that made the move
+     */
     @Override
     public void update(int move, int player) {
         System.out.println("Updating");
@@ -49,6 +54,13 @@ public class ReversiController extends GameController {
         dataController.setScene(new GameBoardView(this, dataController.getData().length, dataController.getYourTurn()).createBoardScene(dataController.getData()));
     }
 
+    /**
+     * Calculates the board result of a move
+     * @param move the move that is made
+     * @param player the player that made the move
+     * @param newDataSet the board on which the move is made
+     * @return an int[] of the new board after the move is made
+     */
     public int[] calculateMove(int move, int player, int[] newDataSet){
         //System.out.println("Calculating move");
         // set the selected square tot the players color
@@ -232,6 +244,12 @@ public class ReversiController extends GameController {
         return dataSet;
     }
 
+    /**
+     * Updates the possible moves for a specific player
+     * @param dataSet the current board
+     * @param player the player for which the possible moves need to be checked
+     * @return an int[] of the board where 0 is not possible and 1 is possible
+     */
     public int[] updatePossibleMoves(int[] dataSet, int player){
         //System.out.println("Updating Possible Moves");
         int[] possibleMoves = new int[dataSet.length];
@@ -250,6 +268,13 @@ public class ReversiController extends GameController {
 
     }
 
+    /**
+     * Checks if a specific move of a specific player is possible
+     * @param move the specific move
+     * @param player the specific player
+     * @param dataSet the current board
+     * @return true if possible, false if not
+     */
     private boolean checkPossibleMoves(int move, int player, int[] dataSet){
         //System.out.println("Checking Possible Moves");
         if(dataSet[move] != 0){
@@ -409,6 +434,9 @@ public class ReversiController extends GameController {
     }
 
 
+    /**
+     * Handles a turn, if AI is turned on an instance of AI is made and told to make a move
+     */
     @Override
     public void turn() {
         //notify user or start ai.
@@ -417,7 +445,7 @@ public class ReversiController extends GameController {
         dataController.setScene(new GameBoardView(this, dataController.getData().length, dataController.getYourTurn()).createBoardScene(dataController.getData()));
         if(AI){
             //run AI code.
-            AI ai = new AI(this);
+            AI ai = new AI();
             //System.out.println("AI is made");
             System.out.println("Possible moves");
             int move = ai.makeMove(dataController.getData(), dataController.getPossibleMoves());
@@ -430,8 +458,12 @@ public class ReversiController extends GameController {
         }
     }
 
+    /**
+     * Sents a move tot the server it it is valid
+     * @param move the move that needs to be send
+     * @return true if succesfull(not your turn anymore) false if not
+     */
     @Override
-
     public boolean sentMove(int move) {
         int[] possibleMoves = dataController.getPossibleMoves();
 
@@ -448,10 +480,18 @@ public class ReversiController extends GameController {
     }
 
 
+    /**
+     * Returns the possible moves
+     * @return int[] of possible moves
+     */
     public int[] getPossibleMoves(){
         int[] pm = dataController.getPossibleMoves();
         return pm;
     }
+
+    /**
+     * Updates the score by counting each players tiles
+     */
     public void updateScore(){
         int[] dataSet = dataController.getData();
 
@@ -474,6 +514,11 @@ public class ReversiController extends GameController {
     }
 
 
+    /**
+     * Gets the image for the tile
+     * @param val 1 for blue, 2 for red
+     * @return the path to the image
+     */
     @Override
     public String getImage(int val) {
         if (val == 1){
@@ -485,16 +530,28 @@ public class ReversiController extends GameController {
         return null;
     }
 
+    /**
+     * Gets the username for yourself
+     * @return the username
+     */
     @Override
     public String getNamePlayer1() {
         return  dataController.getPlayerName();
     }
 
+    /**
+     * Gets the username for your opponent
+     * @return the username
+     */
     @Override
     public String getNameOppenent() {
         return  dataController.getOpponentName();
     }
 
+    /**
+     * Gets a boolean whether you're player 1
+     * @return true if you're player1, false if not
+     */
     @Override
     public boolean getPlayer1() {
         return dataController.getPlayerOne();

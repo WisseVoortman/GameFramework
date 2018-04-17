@@ -21,28 +21,32 @@ public class TCPConnection extends Thread {
      * Static method for getting the object instance
      * @return TCPConnection
      */
-
     public static TCPConnection getInstance() {
         if(ourInstance == null)
             ourInstance = new TCPConnection();
         return ourInstance;
     }
 
+    /**
+     * Check if the connection is made before an instance of TCP connection exist, if an old connection is not closed f.e.
+     * @return true if not null, false otherwise
+     */
     public static boolean checkConnection() {
         return ourInstance != null;
     }
 
+    /**
+     * Check if a connection is made if an instance of TCP connection is allready made
+     * @return true if not null, false otherwise
+     */
     public boolean checkMadeConnection() {
         return ourInstance != null;
     }
 
-    public boolean checkSocket() {
-        if(clientSocket == null) {
-            return false;
-        }
-        return true;
-    }
 
+    /**
+     * Sends the logout command, closes the socket and nullifies the instance
+     */
     public void logout() {
         sentCommand("logout");
         try {
@@ -67,7 +71,6 @@ public class TCPConnection extends Thread {
      * @param port serverport
      * @throws Exception if it can't start a connection / server not found.
      */
-
     public void initializeConnection(String host, int port) throws Exception
     {
         if(clientSocket == null) {
@@ -78,9 +81,8 @@ public class TCPConnection extends Thread {
 
     /***
      * Send command to the server
-     * @param command
+     * @param command the command to be send
      */
-
     public void sentCommand(String command)
     {
         try {
@@ -100,9 +102,8 @@ public class TCPConnection extends Thread {
     /***
      * Recieves messages from the server.
      * sents the messages to the eventHandler
-     * @throws Exception
+     * @throws Exception if it can't listen
      */
-
     public void Listen() throws Exception
     {
         BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -122,14 +123,13 @@ public class TCPConnection extends Thread {
     /***
      * Starts running the listen Thread.
      */
-
     @Override
     public void run()
     {
         try {
             this.Listen();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

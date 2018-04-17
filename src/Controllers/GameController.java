@@ -1,5 +1,8 @@
 package Controllers;
 
+/**
+ * Abstract gamecontroller, has all the methods that a concrete implementation of a game controller needs
+ */
 public abstract class GameController {
     public abstract void update(int move, int player);
     public abstract void turn();

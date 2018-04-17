@@ -5,6 +5,7 @@ import Models.GameType;
 import Views.LoginView;
 import Views.SetupView;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -31,6 +32,13 @@ public class SetupController {
         return new LoginView(this).getLoginScene();
     }
 
+    /**
+     * Starts a connection with the server and if the name is valid sends the login command
+     * @param name the entered username
+     * @param host the entered host(ip address)
+     * @param port the entered port
+     * @return true if it was able to login, false if not
+     */
     public boolean login(String name, String host, String port)
     {
         connection = TCPConnection.getInstance();
@@ -48,10 +56,28 @@ public class SetupController {
 
 
         this.name = name;
-        connection.sentCommand("login " + name);
-        DataController.getInstance().setPlayerName(name);
-
+        if (checkName(name)) {
+            connection.sentCommand("login " + name);
+            DataController.getInstance().setPlayerName(name);
+        } else {
+            showAlert(Alert.AlertType.WARNING, "WARNING", "Name error", "Your player name can't contain spaces, must at least be 1 character long and can't already be in use in the server.");
+        }
         return true;
+    }
+
+    /**
+     * Shows an Alert to the screen
+     * @param type the type of alert
+     * @param title the title of the alert
+     * @param headerText the header of the alert
+     * @param contentText the content of the alert
+     */
+    public void showAlert(Alert.AlertType type, String title, String headerText, String contentText) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
     }
 
     public String getUserName() {
@@ -113,7 +139,10 @@ public class SetupController {
      * @return false if the name contains a space, true if not
      */
     public boolean checkName(String name) {
+        List<String> playersInSever = getDataList(1);
+
         if(name.equals("")) { return false; }
+        if(playersInSever.contains(name)) { return false; }
         for (Character c: name.toCharArray()) {
             if(c.equals(' ') || c.equals('\"')) {
                 return false;
@@ -136,6 +165,10 @@ public class SetupController {
         }
     }
 
+    /**
+     * Starts the setup view
+     * @return the scene from the setup view
+     */
     public Scene InitializeSetupView()
     {
         return new SetupView(this).getSetupScene();

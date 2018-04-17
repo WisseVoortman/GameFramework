@@ -84,10 +84,18 @@ public class DataController {
         this.dataset.playerTwoScore = playerTwoScore;
     }
 
+    /**
+     * Gets the score for player one
+     * @return the score
+     */
     public int getPlayerOneScore(){
         return this.dataset.playerOneScore;
     }
 
+    /**
+     * Gets the score for player two
+     * @return the score
+     */
     public int getPlayerTwoScore(){
         return this.dataset.playerTwoScore;
     }
@@ -95,7 +103,7 @@ public class DataController {
 
     /***
      * Saves the option for using the AI
-     * @param AI
+     * @param AI true if AI is enabled, false if not
      */
 
     public void setAI(boolean AI)
@@ -105,7 +113,7 @@ public class DataController {
 
     /**
      * Sets the ai difficulty
-     * @param difficulty
+     * @param difficulty the difficulty of the AI
      */
     public void setAiDifficulty(int difficulty) {
         aiDifficulty = difficulty;
@@ -114,7 +122,7 @@ public class DataController {
 
     /***
      * Saves the possible moves after these are calculated.
-     * @param boardData
+     * @param boardData the possible moves
      */
 
     public void setPossibleMoves(int[] boardData)
@@ -125,37 +133,43 @@ public class DataController {
 
     /***
      * Saves yourturn boolean.
-     * @param turn
+     * @param turn true if it is your turn, false if not
      */
     public void setYourTurn(boolean turn)
     {
         this.dataset.yourTurn = turn;
     }
 
-    public void setPlayerOne(boolean playerOne)
-    {
-        this.dataset.playerOne = playerOne;
-    }
+    /**
+     * Sets who is player one
+     * @param playerOne true if you're player one, false if not
+     */
+    public void setPlayerOne(boolean playerOne) { this.dataset.playerOne = playerOne; }
 
-    public void setPlayerName(String name)
-    {
-        this.userData.PlayerName = name;
-    }
+    /**
+     * Sets the player name
+     * @param name the player name
+     */
+    public void setPlayerName(String name) { this.userData.PlayerName = name; }
 
-    public void setOpponentName(String name)
-    {
-        this.userData.OpponentName = name;
-    }
+    /**
+     * Sets the opponent name
+     * @param name the opponent name
+     */
+    public void setOpponentName(String name) { this.userData.OpponentName = name; }
 
+    /**
+     * Adds a game to the game list
+     * @param game the game to be added
+     */
     public void addGamelistItem(String game)
-    {
-        this.userData.gamelist.add(game);
-    }
+    { this.userData.gamelist.add(game); }
 
-    public void addPlayerlistItem(String name)
-    {
-        this.userData.playerlist.add(name);
-    }
+    /**
+     * Adds a player to the player list
+     * @param name the player to be added
+     */
+    public void addPlayerlistItem(String name) { this.userData.playerlist.add(name); }
 
     /***
      * Returns the game data
@@ -167,6 +181,10 @@ public class DataController {
         return this.dataset.gameData;
     }
 
+    /**
+     * Gets the dataset
+     * @return the dataset
+     */
     public Dataset getDataSet() {return dataset;}
 
 
@@ -174,7 +192,6 @@ public class DataController {
      * Returns the game type
      * @return GameType
      */
-
     public GameType getGameType()
     {
         return this.dataset.gameType;
@@ -216,56 +233,69 @@ public class DataController {
         return this.dataset.yourTurn;
     }
 
-    public boolean getPlayerOne()
-    {
-        return this.dataset.playerOne;
-    }
+    /**
+     * Gets the boolean player one
+     * @return true if you're player one, false if not
+     */
+    public boolean getPlayerOne() { return this.dataset.playerOne; }
 
-    public String getPlayerName()
-    {
-        return this.userData.PlayerName;
-    }
+    /**
+     * Gets the player username
+     * @return the player name
+     */
+    public String getPlayerName() { return this.userData.PlayerName; }
 
-    public String getOpponentName()
-    {
-        return this.userData.OpponentName;
-    }
+    /**
+     * Gets the opponent username
+     * @return the opponent name
+     */
+    public String getOpponentName() { return this.userData.OpponentName; }
 
-    public List<String> getGamelist()
-    {
-        return this.userData.gamelist;
-    }
+    /**
+     * Gets the game list from userdata
+     * @return the game list
+     */
+    public List<String> getGamelist() { return this.userData.gamelist; }
 
-    public List<String> getPlayerList()
-    {
-        return this.userData.playerlist;
-    }
+    /**
+     * Gets the player list from userdata
+     * @return the player list
+     */
+    public List<String> getPlayerList() { return this.userData.playerlist; }
 
-    public void clearGamelist()
-    {
-        this.userData.gamelist.clear();
-    }
+    /**
+     * Empties the gamelist from userdata
+     */
+    public void clearGamelist() { this.userData.gamelist.clear(); }
 
-    public void clearPlayerlist()
-    {
-        this.userData.playerlist.clear();
-    }
+    /**
+     * Empties the playerlist from userdata
+     */
+    public void clearPlayerlist() { this.userData.playerlist.clear(); }
 
-    public void setPrimayStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
+    /**
+     * Sets the primary stage
+     * @param primaryStage the stage to be set as primary stage
+     */
+    public void setPrimayStage(Stage primaryStage) { this.primaryStage = primaryStage; }
 
+    /**
+     * Gets the primary stage
+     * @return the primary stage
+     */
     public Stage getPrimaryStage() { return primaryStage;}
 
     /**
      * Sets the scene on the primary stage
-     * @param scene
+     * @param scene the scene to be set
      */
     public void setScene(Scene scene) {
         Platform.runLater( () -> {primaryStage.setScene(scene);});
     }
 
-    public Scene getScene(){
-        return primaryStage.getScene();
-    }
+    /**
+     * Gets the current scene
+     * @return the scene
+     */
+    public Scene getScene(){ return primaryStage.getScene(); }
 }

@@ -11,16 +11,16 @@ import java.util.Random;
 public class AI {
     private DataController dataController;
     private int totalTiles;
-    public AI(ReversiController controller) {
+    public AI() {
         this.dataController = DataController.getInstance();
         totalTiles = 0;
     }
 
     /**
      * Makes a move depending on the AI difficulty, 0 for a random move, 1 for a max priority move, 2 for a hardMove(C)
-     * @param dataset
-     * @param pMoves
-     * @return
+     * @param dataset the board
+     * @param pMoves the possible moves
+     * @return the move that the AI decided on
      */
     public int makeMove(int[] dataset, int[] pMoves) {
         int move;
@@ -44,7 +44,6 @@ public class AI {
                 try{
                     ArrayList<Integer> moves = maxPrioMove(dataset, getPriotitymoves(pMoves));
                     move = moves.get(new Random().nextInt(moves.size()));
-                    System.out.println("Making move " + move);
                 }catch(Exception e){
                     move = randomMove(pMoves);
                 }
@@ -75,29 +74,31 @@ public class AI {
      * @return int move The index on the board that is the move made
      */
     private int randomMove(int[] possibleMoves) {
-        System.out.println("AI is making random move");
+        System.out.println("Making random move");
         Random random = new Random();
         ArrayList<Integer> moves = new ArrayList<>(possibleMoves.length);
         for(int i = 0; i < possibleMoves.length; i++) {
-            System.out.println("searching possible move: " + possibleMoves[i]);
             if(possibleMoves[i] == 1) {
-                System.out.println("Empty cell found: " + i);
                 moves.add(i);
             }
         }
         moves.trimToSize();
-        System.out.println(moves.size());
+        //System.out.println(moves.size());
         int index = random.nextInt(moves.size());
-        System.out.println("Random index: " + index);
         int move = moves.get(index);
 
-        System.out.println("Made up move: " + move);
         return move;
     }
 
+    /**
+     * Checks the hardavoidance moves first, then the soft avoidance, then the most tiles and the max prio move to come up with the best move
+     * @param dataset the board
+     * @param priorityMoves the moves assigned to their priority
+     * @return
+     */
     private int hardMove(int[] dataset ,HashMap<Integer, ArrayList<Integer>> priorityMoves){
         ArrayList<Integer> moves = new ArrayList<>();
-
+        System.out.println("Making hard move");
 
         // check if hardAV move is good
         moves.addAll(this.checkHardAv(dataset,priorityMoves));
@@ -105,21 +106,13 @@ public class AI {
             return this.getMostTileMove(dataset, moves);
         }
 
-        // check if hardAV move is good
+        // check if softAV move is good
         moves.addAll(this.checkSoftAv(dataset,priorityMoves));
         if(moves.size() > 0){
             return this.getMostTileMove(dataset, moves);
         }
 
 
-        //if(this.getTotalTiles(dataset) < 24){
-        //try blocking the opponent.
-        //moves.addAll(blockingMove(dataset, priorityMoves));
-        //  if(moves.size() > 0){
-        //return this.getMostTileMove(dataset, moves);
-        //}
-
-        //}
         // get max tiles based on priority
         try{
             moves.addAll(this.maxPrioMove(dataset,priorityMoves));
@@ -127,19 +120,23 @@ public class AI {
 
         }
 
-
         if(moves.size() == 0){
-            System.out.println("moves size = 0");
+            //System.out.println("moves size = 0");
             ReversiController controller = new ReversiController();
             return this.randomMove(controller.updatePossibleMoves(dataset, getplayer()));
         }
-        System.out.println("Line:103 move size " + moves.size());
         Random r = new Random();
         int index = r.nextInt(moves.size());
         return moves.get(index);
 
     }
 
+    /**
+     * Calculates a move(s) that leaves the opponent with the worst possible moves
+     * @param dataset the board
+     * @param priorityMoves the moves assigned to their priority
+     * @return an ArrayList with all the moves
+     */
     private ArrayList<Integer> blockingMove(int[] dataset ,HashMap<Integer, ArrayList<Integer>> priorityMoves) {
         ReversiController controller = new ReversiController();
         ArrayList<Integer> moves = new ArrayList<>();
@@ -161,13 +158,8 @@ public class AI {
         ArrayList<Integer> blockingMoves = new ArrayList<>();
         int prefPrio = 0;
 
-        int player = 2;
-        int opponent = 1;
-
-        if(dataController.getPlayerOne()) {
-            player = 1;
-            opponent = 2;
-        }
+        int player = getplayer();
+        int opponent = getopponent();
 
         for(int move : moves) {
             int[] newBoard = controller.calculateMove(move, player, dataset);
@@ -207,9 +199,7 @@ public class AI {
                 blockingMoves.add(move);
             }
         }
-
         return blockingMoves;
-
     }
 
     /**
@@ -218,20 +208,15 @@ public class AI {
      * It also relies on the future opponent tile gain and player tile loss to make a decision
      * @param dataset
      * @param priorityMoves
-     * @return
+     * @return an ArrayList of move indexes
      */
     private ArrayList<Integer> maxPrioMove(int[] dataset ,HashMap<Integer, ArrayList<Integer>> priorityMoves) {
         ReversiController controller = new ReversiController();
 
         ArrayList<Integer> doableMoves = new ArrayList<>();
 
-        int player = 2;
-        int opponent = 1;
-
-        if(dataController.getPlayerOne()) {
-            player = 1;
-            opponent = 2;
-        }
+        int player = getplayer();
+        int opponent = getopponent();
 
         int prevPlayerTiles = 0;
         double prevMovePoint = 0;
@@ -302,20 +287,16 @@ public class AI {
                 int opponentGain = newOpponentTiles - opponentTiles;
                 int playerLoss = newPlayerTiles - playerTiles;
 
-                //int tilePoints = (-1 * playerLoss) + opponentGain;
                 int threshhold = opponentTiles / 3;
-                //make choice based on thresholds of loss and gain
-                System.out.println("Move " + move);
+                /*System.out.println("Move " + move);
                 System.out.println("Priority " + prio);
                 System.out.println("Opponentgain " + opponentGain);
                 System.out.println("PlayerLoss " + playerLoss);
                 System.out.println("Threshold " + threshhold);
-                //System.out.println("TilePoints " + tilePoints );
-                System.out.println("MovePoints " + movePoint);
+                System.out.println("MovePoints " + movePoint);*/
 
+                //make choice based on thresholds of loss and gain
                 if(opponentGain < threshhold && playerLoss > -threshhold) {
-                    //if(tilePoints <= prevTilePoints) {
-                    //prevTilePoints = tilePoints;
                     //make choice based on movepoints
                     if (movePoint >= prevMovePoint) {
                         prevMovePoint = movePoint;
@@ -338,6 +319,12 @@ public class AI {
         return doableMoves;
     }
 
+    /**
+     * Checks if a move with priority 0 (hard avoidance) is a move that may be usefull
+     * @param dataset the current board
+     * @param priorityMoves Hashmap with all the moves assigned to their key priority
+     * @return ArrayList of move indexes
+     */
     private ArrayList<Integer> checkHardAv(int[] dataset, HashMap<Integer, ArrayList<Integer>> priorityMoves){
         ArrayList<Integer> moves = new ArrayList<>();
         ArrayList<Integer> avoid = this.getHardDiagonalAvoidance();
@@ -360,18 +347,19 @@ public class AI {
         return moves;
     }
 
+    /**
+     * Checks if a move with priority 1 (soft avoidance) may be usefull
+     * @param dataset the current board
+     * @param priorityMoves Hashmap with all the moves assigned to their key priority
+     * @return ArrayList of move indexes
+     */
     private ArrayList<Integer> checkSoftAv(int[] dataset, HashMap<Integer, ArrayList<Integer>> priorityMoves) {
         ArrayList<Integer> moves = new ArrayList<>();
         ReversiController controller = new ReversiController();
 
         boolean equal = false;
-        int player = 2;
-        int opponent = 1;
-
-        if(dataController.getPlayerOne()){
-            player = 1;
-            opponent = 2;
-        }
+        int player = getplayer();
+        int opponent = getopponent();
 
 
         if(priorityMoves.get(3).size() > 0){
@@ -442,13 +430,9 @@ public class AI {
     }
 
     private boolean aheadOfOpponent(int[] dataset){
-        int player = 2;
-        int opponent = 1;
+        int player = getplayer();
+        int opponent = getopponent();
 
-        if(dataController.getPlayerOne()){
-            player = 1;
-            opponent = 2;
-        }
 
         int playerTiles = 0;
         int opponentTiles = 0;
@@ -472,6 +456,11 @@ public class AI {
         return false;
     }
 
+    /**
+     * Gets the total amount of tiles on the board
+     * @param board the board
+     * @return total amount of tiles
+     */
     private int getTotalTiles(int[] board){
         int totaltiles = 0;
         for (int move : board){
@@ -482,6 +471,12 @@ public class AI {
         return totaltiles;
     }
 
+    /**
+     * Loops to the possible moves int[] and creates a hashmap that assigns a priority as key with its value
+     * an ArrayList with all the moves with that priority
+     * @param pmdataset the possiblemoves int[]
+     * @return a hashmap<Integer, ArrayList<Integer>>
+     */
     private HashMap<Integer, ArrayList<Integer>> getPriotitymoves(int[] pmdataset){
         HashMap<Integer, ArrayList<Integer>> priomoves = new HashMap<>();
         ArrayList<Integer> cornerMoves = new ArrayList<>();
@@ -522,6 +517,12 @@ public class AI {
         return priomoves;
     }
 
+    /**
+     * Calculates the board if the opponent makes a certain move
+     * @param board the old board
+     * @param move the move the will be made
+     * @return the new board after the move is made
+     */
     private int[] calculateOpponentmoves(int[] board, int move){
         int player = 2;
         int opponent = 1;
@@ -537,17 +538,17 @@ public class AI {
         return controller.updatePossibleMoves(newboard, opponent);
     }
 
+    /**
+     * Calculates the best move if you only want the most tiles
+     * @param dataset the current board
+     * @param goodmoves the moves that are doable
+     * @return the move that gains the most tiles
+     */
     private int getMostTileMove(int[] dataset, ArrayList<Integer> goodmoves){
         int mostTiles = 0;
         int bestmove = -1;
 
-        int player = 2;
-        int opponent = 1;
-
-        if(dataController.getPlayerOne()){
-            player = 1;
-            opponent = 2;
-        }
+        int player = getplayer();
 
         ReversiController controller = new ReversiController();
         for(int i : goodmoves){
@@ -561,6 +562,10 @@ public class AI {
         return bestmove;
     }
 
+    /**
+     * returns 1 or 2 depending on which player you are
+     * @return 1 or 2
+     */
     private int getplayer(){
         int player = 2;
         if(dataController.getPlayerOne()){
@@ -569,6 +574,10 @@ public class AI {
         return player;
     }
 
+    /**
+     * returns 1 or 2 depending on which player the opponent is
+     * @return 1 or 2
+     */
     private int getopponent(){
         int opponent = 1;
         if(dataController.getPlayerOne()){
@@ -578,6 +587,10 @@ public class AI {
     }
 
 
+    /**
+     * Creates and fills an ArrayList with all the indexes that are corners
+     * @return an arraylist with indexes
+     */
     private ArrayList<Integer> getCorners() {
         ArrayList<Integer> corners = new ArrayList<>();
         corners.add(0);
@@ -587,6 +600,10 @@ public class AI {
         return corners;
     }
 
+    /**
+     * Creates and fills an ArrayList with all the indexes that are sides
+     * @return an arraylist with indexes
+     */
     private ArrayList<Integer> getSides() {
         ArrayList<Integer> sides = new ArrayList<>();
         sides.add(2);
@@ -608,6 +625,10 @@ public class AI {
         return sides;
     }
 
+    /**
+     * Creates and fills an ArrayList with all the indexes that are soft avoidance
+     * @return an arraylist with indexes
+     */
     private ArrayList<Integer> getSoftAvoidance() {
         ArrayList<Integer> softAvoidance = new ArrayList<>();
         softAvoidance.add(10);
@@ -629,6 +650,10 @@ public class AI {
         return softAvoidance;
     }
 
+    /**
+     * Creates and fills an ArrayList with all the indexes that are hard avoidance
+     * @return an arraylist with indexes
+     */
     private ArrayList<Integer> getHardAvoidance() {
         ArrayList<Integer> hardAvoidance = new ArrayList<>();
         hardAvoidance.add(1);
@@ -646,6 +671,10 @@ public class AI {
         return hardAvoidance;
     }
 
+    /**
+     * Creates and fills an ArrayList with all the indexes that are diagonal to hard avoidance indexes
+     * @return an arraylist with indexes
+     */
     private ArrayList<Integer> getHardDiagonalAvoidance(){
         ArrayList<Integer> hardAvoidance = new ArrayList<>();
         hardAvoidance.add(9);

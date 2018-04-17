@@ -10,6 +10,10 @@ public class Main extends Application {
     protected Stage primaryStage;
     protected GridPane grid;
 
+    /**
+     * Starts the javafx application
+     * @param primaryStage the primary stage
+     */
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -28,6 +32,9 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Makes sure you're logged out of the server when you close the application
+     */
     @Override
     public void stop() {
         //log out on exit

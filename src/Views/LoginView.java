@@ -57,35 +57,16 @@ public class LoginView {
      */
     private void setEventHandlers() {
         this.login.setOnAction((ActionEvent e) -> {
-            if(controller.checkName(name.getText())) {
-                if (controller.login(name.getText(), serverUrl.getText(), port.getText())) {
-                        controller.setScene(controller.InitializeSetupView());
-                } else {
-                    //error with loging in
-                    port.setText("7789");
-                    serverUrl.setText("Localhost");
-
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("ERROR");
-                    alert.setHeaderText("Could not Login");
-                    alert.setContentText("The server could not log you in");
-                    alert.showAndWait();
-                }
+            if (controller.login(name.getText(), serverUrl.getText(), port.getText())) {
+                controller.setScene(controller.InitializeSetupView());
             } else {
-                //error with name syntax
-                name.setText("");
-
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("WARNING");
-                alert.setHeaderText("Name error");
-                alert.setContentText("Your player name can't contain spaces and must at least be 1 character long and cant be longer than 7 characters");
-
-                alert.showAndWait();
+                //error with loging in
+                port.setText("7789");
+                serverUrl.setText("Localhost");
+                controller.showAlert(Alert.AlertType.ERROR, "ERROR", "Could not Login", "The server could not log you in");
             }
         });
     }
-
-
 
     /**
      * Sets the textboxes name, server address and port
@@ -145,6 +126,11 @@ public class LoginView {
         grid.add(hbBtn, 0, 3);
     }
 
+    /**
+     * Sets the styling of the gridpane
+     * @param grid
+     * @param bp
+     */
     private void setStyling(GridPane grid,BorderPane bp){
        /* Image image = new Image("Images/loginLine.png");
         bp.setBottom(new ImageView(image));*/
